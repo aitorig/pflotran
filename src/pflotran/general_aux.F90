@@ -685,7 +685,7 @@ subroutine GeneralAuxVarCompute(x,gen_auxvar,global_auxvar,material_auxvar, &
 
       call characteristic_curves%saturation_function% &
              CapillaryPressure(gen_auxvar%sat(lid),gen_auxvar%pres(cpid), &
-                               dpc_dsatl,option)                             
+                               dpc_dsatl,material_auxvar,option)                             
       gen_auxvar%pres(lid) = gen_auxvar%pres(gid) - &
                              gen_auxvar%pres(cpid)
                              
@@ -747,7 +747,7 @@ subroutine GeneralAuxVarCompute(x,gen_auxvar,global_auxvar,material_auxvar, &
       
       call characteristic_curves%saturation_function% &
              CapillaryPressure(gen_auxvar%sat(lid),gen_auxvar%pres(cpid), &
-                               dpc_dsatl,option)                             
+                               dpc_dsatl,material_auxvar,option)                             
       if (associated(gen_auxvar%d)) then
         ! for now, calculate derivative through finite differencing
 #if 0
@@ -755,7 +755,8 @@ subroutine GeneralAuxVarCompute(x,gen_auxvar,global_auxvar,material_auxvar, &
         tempreal = 1.d-6 * gen_auxvar%sat(lid)
         tempreal2 = gen_auxvar%sat(lid) + tempreal
         call characteristic_curves%saturation_function% &
-             CapillaryPressure(tempreal2,tempreal3,dpc_dsatl,option)
+             CapillaryPressure(tempreal2,tempreal3,dpc_dsatl,material_auxvar, &
+                               option)
         gen_auxvar%d%pc_satg = -1.d0*(tempreal3-gen_auxvar%pres(cpid))/tempreal
 #else
         gen_auxvar%d%pc_satg = -1.d0*dpc_dsatl
